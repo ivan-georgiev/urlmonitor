@@ -1,0 +1,42 @@
+{
+    // Editor settings
+    "editor.tabSize": 4,
+    "editor.detectIndentation": false,
+    "editor.formatOnSave": true,
+    // File settings
+    "files.trimTrailingWhitespace": true,
+    "files.trimFinalNewlines": true,
+    "files.insertFinalNewline": true,
+    "files.eol": "\n",
+    "files.encoding": "utf8",
+    "files.autoSave": "afterDelay",
+    "files.autoSaveDelay": 1000,
+    // Style settings
+    "python.linting.enabled": true,
+    "python.linting.lintOnSave": true,
+    "python.linting.pylintEnabled": true,
+    "python.linting.mypyEnabled": true,
+    "python.formatting.provider": "autopep8",
+    "python.formatting.autopep8Args": [
+        "--ignore",
+        "E401,E402"
+    ],
+    "[python]": {
+        "editor.rulers": [
+            79
+        ]
+    },
+    "python.testing.pytestArgs": [
+        "--no-cov",
+        "--verbose",
+    ],
+    "python.linting.pylintArgs": [
+        "--load-plugins",
+        "pylint_quotes"
+    ],
+    "python.testing.unittestEnabled": false,
+    "python.testing.nosetestsEnabled": false,
+    "python.testing.pytestEnabled": true,
+    "python.venvPath": "${workspaceFolder}",
+    "python.pythonPath": ".venv\\Scripts\\python.exe"
+}
