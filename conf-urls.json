@@ -1,0 +1,41 @@
+[
+    {
+        "url": "https://www.nytimes.com/guides/",
+        "checkPeriodInSec": 60,
+        "requestParams": {
+            "method": "HEAD",
+            "headers": {}
+        },
+        "responseCodesHealthy": [
+            200,
+            300
+        ]
+    },
+    {
+        "url": "https://google.com",
+        "checkPeriodInSec": 10,
+        "requestParams": {
+            "method": "GET",
+            "verify_ssl": "false",
+            "allow_redirects": "true",
+            "max_redirects": 2
+        },
+        "responseCodesHealthy": [
+            200
+        ],
+        "responseBodyHealthyRegex": "OK",
+        "responseHeadersHealthyRegex": {
+            "Content-Type": "html"
+        }
+    },
+    {
+        "url": "https://docs.python.org/404.page",
+        "checkPeriodInSec": 120,
+        "requestParams": {
+            "method": "HEAD"
+        },
+        "responseCodesHealthy": [
+            200
+        ]
+    }
+]

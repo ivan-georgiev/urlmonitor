@@ -1,0 +1,66 @@
+#!/usr/bin/env python3
+
+import subprocess
+import sys
+import re
+from typing import IO
+from pprint import pp
+import pathlib
+
+
+def main():
+
+    # config for coverage minimum target
+    coverageTarget = 0
+
+    print('Pre-push hoook start')
+
+    try:
+        # get all python files and filter those in src/ . '/' is os-independent as returned from git ls-files
+        files = subprocess.check_output(
+            ['git', 'ls-files']).decode('utf-8').strip().splitlines()
+        pythonFiles = [f for f in files
+                       if f.endswith('.py') and f.startswith('src/')]
+
+        print('Check tests')
+        rootFolder = pathlib.Path(__file__).parent.parent
+        out = subprocess.check_output(
+            ['pytest', rootFolder.joinpath('tests')],
+            shell=True,
+            cwd=rootFolder
+        ).decode('utf-8').strip().splitlines()
+        pp(out)
+
+        print('Check coverage')
+        out = subprocess.check_output(
+            ['coverage', 'report', '-i', '-m'] + pythonFiles,
+            shell=True,
+            cwd=rootFolder
+        ).decode('utf-8').strip().splitlines()
+        pp(out)
+
+        lastRow = out[-1].split()
+        if not (lastRow[0] == 'TOTAL' and lastRow[-1].endswith('%')):
+            raise ValueError('Unable to get TOTAL coverage')
+        totalCovered = int(lastRow[-1][:-1])
+        if totalCovered < coverageTarget:
+            raise ValueError(
+                f'Code coverage must be at least {coverageTarget}%. Current: {totalCovered}%')
+
+    except subprocess.CalledProcessError as e:
+        pp(e.output
+           .decode('utf-8')
+           .strip()
+           .splitlines()
+           )
+        sys.exit(1)
+    except Exception as e:
+        print(str(e))
+        sys.exit(1)
+
+    print('Pre-push hoook end')
+    sys.exit(0)
+
+
+if __name__ == '__main__':
+    main()

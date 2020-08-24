@@ -1,3 +1,6 @@
+"""
+Module implementig the URL watcher and the Subject role in Subject-Observer pattern
+"""
 from base.subject import Subject
 from watcherconfig import WatcherConfig
 
@@ -11,12 +14,12 @@ import uuid
 import copy
 
 logging.basicConfig(
-    format="%(asctime)s %(levelname)s:%(name)s: %(message)s",
+    format='%(asctime)s %(levelname)s:%(name)s: %(message)s',
     level=os.environ.get('LOGLEVEL', 'INFO').upper(),
-    datefmt="%H:%M:%S",
+    datefmt='%H:%M:%S',
     stream=sys.stderr,
 )
-logger = logging.getLogger("scraper")
+logger = logging.getLogger('scraper')
 
 
 class Scraper(Subject):
@@ -52,7 +55,7 @@ class Scraper(Subject):
         requestParams are passed to `session.request()`.
         """
         while True:
-            error = False
+            error = None
             try:
                 resp = await self._invokeWebRequest(url=url.url, session=session, requestParams=url.requestParams)
             except (
@@ -60,7 +63,7 @@ class Scraper(Subject):
                 aiohttp.http_exceptions.HttpProcessingError,
             ) as e:
                 logger.error(
-                    f"aiohttp exception for {url.url} [{getattr(e, 'status', None)}]: {getattr(e, 'message', None)}"
+                    f'aiohttp exception for {url.url} [{getattr(e, "status", None)}]: {getattr(e, "message", None)}'
                 )
             except Exception as e:
                 raise
@@ -90,5 +93,5 @@ class Scraper(Subject):
                 tasks.append(
                     self._checkUrl(url=url, session=session)
                 )
-            r = await asyncio.gather(*tasks)
-            print(r[0].status)
+            res = await asyncio.gather(*tasks)
+            print(res[0].status)

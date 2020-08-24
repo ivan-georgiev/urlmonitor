@@ -1,0 +1,77 @@
+#!/usr/bin/env python3
+
+import subprocess
+import sys
+import re
+import pathlib
+
+
+def checkBranchName(currentBranch: str) -> None:
+
+    if currentBranch == 'master':
+        raise NameError(
+            'Master is protected. Create feature branch to introduce changes'
+        )
+
+    validBranchNames = r'^(feature|test|bugfix|docs)/[a-z0-9-]+$'
+    branchRegex = re.compile(r'^(feature|test|bugfix|docs)/[a-z0-9-]+$')
+    if not branchRegex.match(currentBranch):
+        raise NameError(
+            f'Invalid branch name {currentBranch}. Valid names are: {validBranchNames}'
+        )
+
+
+def main():
+
+    print('Pre-commit hoook start')
+
+    try:
+
+        repoRoot = pathlib.Path(__file__).parent.parent
+
+        print('Validate branch name')
+        currentBranch = subprocess.check_output(
+            ['git', 'rev-parse', '--abbrev-ref', 'HEAD'], shell=True).decode('utf-8').strip()
+        checkBranchName(currentBranch)
+
+        # get all python files and filter those in src/ . '/' is os-independent as returned from git ls-files
+        files = subprocess.check_output(
+            ['git', 'ls-files']).decode('utf-8').strip().splitlines()
+        pythonFiles = [f for f in files
+                       if f.endswith('.py') and f.startswith('src/')]
+
+        print('Check linters - pylint')
+        for f in pythonFiles:
+            out = subprocess.check_output(
+                ['pylint', '--load-plugins', 'pylint_quotes', f]).decode('utf-8').strip().splitlines()
+            print(out)
+
+        print('Check linters - mypy')
+        for f in pythonFiles:
+            out = subprocess.check_output(
+                ['mypy', f]).decode('utf-8').strip().splitlines()
+            print(out)
+
+        print('Check security - detect-secrets')
+        out = subprocess.run(
+            ['detect-secrets-hook', '--baseline',
+                '.secrets.baseline.json'] + files,
+            cwd=repoRoot,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            shell=True,
+            check=False
+        )
+        if out.returncode != 0:
+            raise Exception(out.stderr.decode('utf-8'))
+
+    except Exception as e:
+        print(str(e))
+        sys.exit(1)
+
+    print('Pre-commit hoook end')
+    sys.exit(0)
+
+
+if __name__ == '__main__':
+    main()

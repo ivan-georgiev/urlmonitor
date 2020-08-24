@@ -1,3 +1,8 @@
+# pylint: disable=too-few-public-methods,too-many-arguments
+"""
+Module containing watcher configuration
+"""
+
 
 class WatcherConfig():
     """

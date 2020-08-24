@@ -1,3 +1,6 @@
+"""
+Interface to be implemented by classes which to subsribe for notification
+"""
 from abc import ABC, abstractmethod
 
 

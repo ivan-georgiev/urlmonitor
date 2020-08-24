@@ -1,3 +1,8 @@
+# pylint: disable=too-many-arguments
+
+"""
+Observer implemtation doing OS command
+"""
 from base.iobserver import IObserver
 
 import subprocess
@@ -6,12 +11,12 @@ import os
 import sys
 
 logging.basicConfig(
-    format="%(asctime)s %(levelname)s:%(name)s: %(message)s",
+    format='%(asctime)s %(levelname)s:%(name)s: %(message)s',
     level=os.environ.get('LOGLEVEL', 'INFO').upper(),
-    datefmt="%H:%M:%S",
+    datefmt='%H:%M:%S',
     stream=sys.stderr,
 )
-logger = logging.getLogger("osaction")
+logger = logging.getLogger('osaction')
 
 
 class OsAction(IObserver):

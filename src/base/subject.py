@@ -1,3 +1,6 @@
+"""
+Module containing the Subject base class intended to be inherited
+"""
 from base.iobserver import IObserver
 from uuid import UUID
 import logging

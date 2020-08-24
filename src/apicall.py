@@ -1,3 +1,6 @@
+"""
+Module impementing api call in case of error
+"""
 from base.iobserver import IObserver
 
 import requests
@@ -6,15 +9,18 @@ import os
 import sys
 
 logging.basicConfig(
-    format="%(asctime)s %(levelname)s:%(name)s: %(message)s",
+    format='%(asctime)s %(levelname)s:%(name)s: %(message)s',
     level=os.environ.get('LOGLEVEL', 'INFO').upper(),
-    datefmt="%H:%M:%S",
+    datefmt='%H:%M:%S',
     stream=sys.stderr,
 )
-logger = logging.getLogger("apiaction")
+logger = logging.getLogger('apiaction')
 
 
 class ApiCall(IObserver):
+    """
+    Class implementing api call in case of error
+    """
 
     # api timeout
     _TIMEOUT = 20
