@@ -33,6 +33,7 @@ def main():
         print('Check coverage')
         out = subprocess.check_output(
             ['coverage', 'report', '-i', '-m'] + pythonFiles,
+
             cwd=rootFolder
         ).decode('utf-8').strip().splitlines()
         pp(out)
