@@ -26,7 +26,6 @@ def main():
         rootFolder = pathlib.Path(__file__).parent.parent
         out = subprocess.check_output(
             ['pytest', rootFolder.joinpath('tests')],
-            shell=True,
             cwd=rootFolder
         ).decode('utf-8').strip().splitlines()
         pp(out)
@@ -34,7 +33,6 @@ def main():
         print('Check coverage')
         out = subprocess.check_output(
             ['coverage', 'report', '-i', '-m'] + pythonFiles,
-            shell=True,
             cwd=rootFolder
         ).decode('utf-8').strip().splitlines()
         pp(out)

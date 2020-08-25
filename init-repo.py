@@ -8,7 +8,7 @@ def main():
     Main method of init repo.
     """
     subprocess.run(['git', 'config', '--local', 'include.path', '../.gitconfig'],
-                   shell=True, check=True, capture_output=True
+                   check=True
                    )
 
 
